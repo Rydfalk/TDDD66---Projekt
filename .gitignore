@@ -49,6 +49,7 @@ Temporary Items
 *.PDF
 *.bak
 *.log
+*.dvi
 Studsmatta.pdf
 Studsmatta.aux
 Studsmatta.log
