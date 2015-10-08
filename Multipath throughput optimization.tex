@@ -23,14 +23,24 @@
 
 \section{Abstract}
 
-We have made a project about the throughput in multipath networks. Specifically in WiFi and Bluetooth networks. By analysing and comparing these we have made a few conclusions about strengths and weaknesses for both. We have done a simulation of some scenarios based on the real world and what might happen in a network. We had some hypothesis about what should happen in these scenarios and discussed possible solutions. Once we conducted the simulations we revised our hypothesis and made an analysis of the results. We came to a conclusion and discussed other possible scenarios. We have also made some hypothesises about when and where the different methods of network routing should be used and a few examples of implementations.
+In this project we evaluate and make some conclusions about the use and efficiency of TCP with multipathing. This is a new protocol in progress often refered to as MPTCP. We will only have data from a LTE network, but will discuss the use of this in other networks as it is a strength of the protocol to use many paths, possebly over many different types of networks. We aspired to do our own simulations, but as the time was short and the programs found too complex and our knowledge of coding C++ was limited we had to use results of another study. \cite{MPTCP-LTE} But before we analysed the results we made some hypothesies about what we were expecting. Once we've analysed their method and looked over their results we made our own conclusions and posed a few new questions that would be interesting to investigate in further studies.
+
+
+%We have made a project about the throughput in multipath networks. Specifically in WiFi and Bluetooth networks. By analysing and comparing these we have made a few conclusions about strengths and weaknesses for both. We have done a simulation of some scenarios based on the real world and what might happen in a network. We had some hypothesis about what should happen in these scenarios and discussed possible solutions. Once we conducted the simulations we revised our hypothesis and made an analysis of the results. We came to a conclusion and discussed other possible scenarios. We have also made some hypothesises about when and where the different methods of network routing should be used and a few examples of implementations.%
 
 \section{Introduction}
 
 The way we transfer information varies a lot between places and situations. Some techniques work better in certain environments, while they encounter complications in others. People in different countries have different interests, standards and financial potential. Because of all these circumstances affecting mobile networks, it is important to actually study how information flows through them. For instance; in areas with high population density there might be easier to rout data between end users towards an access point, while in sparsely populated areas it might be better with one cellular tower (or even a satellite) for connection. In a lot of central and southern African countries people have access to a phone but no electricity, in such an environment power saving might be a key feature of data transfer, and some power consuming routing options are excluded.
 
-There are many ways to transfer information electronically, however in this report we will focus on routing in different kinds of networks and different methods of routing. In many networks there is a lot of data flowing and the traffic is very high over certain paths. If a path is faster than other then many protocols will try to use that path even though it is heavily burdened since it is hard to measure traffic until after a packet has failed to be delivered. So one way to solve this is by sending a few packets over a different path even though it is slower. This is referred to as multipathing. The theory is that by sending packets different routes the throughput and effective use of the network will be higher than if the devices send all packets the same route. 
+Even though it is old, TCP is the most widely used protocol for data transfering. But with a growing internet and the number of users rise extremely fast the need for a more effective service is needed. Specifically with mobile devices like phones that use many different types of networks there is a lot of potential for improvement. This is something that was discussed during the 10th International IFIP TC 6 Networking conference in Valencia in 2011 \cite{RFC6824}. It was argued that as our devices have so many different interfaces we need to update the protocol made when they used only one interface. And that is something we hope to be able to at least argue for and make a few assumptions about in the end.
 
+
+%There are many ways to transfer information electronically, however in this report we will focus on routing in different kinds of networks and different methods of routing. In many networks there is a lot of data flowing and the traffic is very high over certain paths. If a path is faster than other then many protocols will try to use that path even though it is heavily burdened since it is hard to measure traffic until after a packet has failed to be delivered. So one way to solve this is by sending a few packets over a different path even though it is slower. This is referred to as multipathing. The theory is that by sending packets different routes the throughput and effective use of the network will be higher than if the devices send all packets the same route. 
+
+\section{MPTCP}
+The Internet Engineering Task Force (IETF) is working on MPTCP. RFC 6824 is experimental and has been in progress since january 2013. It is well worked out and is not far from being ready for being put to industrial use. But as such there is no real implementation of it outside the experimental phase, so there are no finished simulators or modules of MPTCP yet. There are a few studies made outside IETF built on what the RFC has stated and they have made some simulations that are publicly available, but they are not easily implemented unless a lot of work is put down.
+
+The simple rundown is that the protocol uses the same method as TCP with the exception of what path is used for the packets. 
 
 \section{Method}
 
@@ -58,6 +68,15 @@ Also, when there is a lot of different paths there is less chance of trouble if 
 
 There are still some problems with multipathing. When looking at multipathing between cellular and wi-fi (which is probably the most relevant multi-channel implementation) we can often see a significant difference in RTT (round trip time). We believe that this might end up showing some interesting effects in the case of multipathing. We also often have the issue of the cellular connection being metered, which is a strong reason to not use it if wi-fi is available. These two facts lead us to believe that there are ways to use the multipathing in such a way that both links are able to bring their respective benefits into the multipathing algorithms. One might be able to distribute the data over the two links depending on some attribute of the data, for instance how big the packet is or what application requested the TCP-delivery. Though the latter suggestion will probably violate the protocol stack praxis.
 
+\section{Research and simulations}
+
+\subsection{Problems and solutions}
+
+The first thing to state is that we have not been able to do our own simulations. It prooved too complicated to do any actual simulations using programs like dummynet, NS-3 and OMNET++. None of these examples had a working implementation of multipath-tcp so to make one we would have to write the code ourselves, and since we have not had any previous courses in C++ coding this was a task too difficult.
+
+But on a brighter note we found that we were not alone in wanting to do these types of simulations. We found a few different articles that cover this specific area. One in particular used OMNET++ to simulate and evaluate multipath-tcp in LTE networks. So instead of doing our own tests we will use the results of the \emph{Multipath TCP in LTE Networks} from Czech Technical University in Prague
+
+
 
 \section{Time plan}
 \begin{description}
@@ -72,6 +91,28 @@ Write ~3 more pages (so ~7 in total). Make sharp simulation. Draw conclusions. M
 \item[Week 42]
 Seminar and finish report
 \end{description}
+
+\begin{thebibliography}{9}
+
+\bibitem{MPTCP-LTE}
+Ondrej VONDROUS , Peter MACEJKO , Zbynek KOCUR \\
+\emph{Multipath TCP in LTE Networks}\\
+Czech Technical University in Prague, 2014
+
+\bibitem{VALENCIA}
+BARRE, S., Ch. PAASCH and O. BONAVENTURE.\\
+\emph{MultiPath TCP: From Theory to Practice.}\\
+In: 10th International IFIP TC 6 Networking
+Conference. Valencia: Springer, 2011
+
+\bibitem{RFC6824}
+RFC 6824.  \\
+\emph{TCP Extensions for Multipath Operation with Multiple Addresses} \\ 
+https://tools.ietf.org/html/rfc6824.\\ IETF, 2013.
+
+
+\end{thebibliography}
+
 
 
 
