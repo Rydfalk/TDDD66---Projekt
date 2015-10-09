@@ -32,7 +32,7 @@ In this project we evaluate and make some conclusions about the use and efficien
 
 The way we transfer information varies a lot between places and situations. Some techniques work better in certain environments, while they encounter complications in others. People in different countries have different interests, standards and financial potential. Because of all these circumstances affecting mobile networks, it is important to actually study how information flows through them. For instance; in areas with high population density there might be easier to rout data between end users towards an access point, while in sparsely populated areas it might be better with one cellular tower (or even a satellite) for connection. In a lot of central and southern African countries people have access to a phone but no electricity, in such an environment power saving might be a key feature of data transfer, and some power consuming routing options are excluded.
 
-Even though it is old, TCP is the most widely used protocol for data transferring. But with a growing internet and the number of users rise extremely fast the need for a more effective service is needed. Specifically with mobile devices like phones that use many different types of networks there is a lot of potential for improvement. This is something that was discussed during the 10th International IFIP TC 6 Networking conference in Valencia in 2011 \cite{RFC6824}. It was argued that as our devices have so many different interfaces we need to update the protocol made when they used only one interface. And that is something we hope to be able to at least argue for and make a few assumptions about in the end.
+Even though it is old, TCP is the most widely used protocol for data transferring. But with a growing internet and the number of users rise extremely fast the need for a more effective service is needed. Specifically with mobile devices like phones that use many different types of networks there is a lot of potential for improvement. This is something that was discussed during the 10th International IFIP TC 6 Networking conference in Valencia in 2011 \cite{RFC6824}. It was argued that as our devices have so many different interfaces we need to update the protocol made when they used only one interface. And that is something we hope to be able to at least argue for and make a few assumptions about it in the end.
 
 
 %There are many ways to transfer information electronically, however in this report we will focus on routing in different kinds of networks and different methods of routing. In many networks there is a lot of data flowing and the traffic is very high over certain paths. If a path is faster than other then many protocols will try to use that path even though it is heavily burdened since it is hard to measure traffic until after a packet has failed to be delivered. So one way to solve this is by sending a few packets over a different path even though it is slower. This is referred to as multipathing. The theory is that by sending packets different routes the throughput and effective use of the network will be higher than if the devices send all packets the same route. 
@@ -44,22 +44,23 @@ Basically MPTCP uses the same method for sending and receiving packets as TCP. T
 
 \section{Method}
 
-We want to evaluate different methods of pathing in a network to get good throughput. If we are to do any tests on a larger scale it will be a lot of complex work unless we do a simulation. Since we want to do tests based on multipathing, the simulator has to include a few features. These will be briefly discussed in the following paragraph.
+We want to evaluate different methods of pathing in a network to get good throughput. If we are to do any tests on a larger scale it will be a lot of complex work unless we do a simulation. But since we didn't manage to get any of the simulation programs working, we will use the results of another articles work. The article called \emph{Multipath TCP in LTE Networks} and in it they have results from simulations we would have wanted to do so by using their results we will probably be able to draw the same conclusions we would have with our own simulation, if not even better.
 
-But since we didn't manage to get any of the simulation programs working, we will use the results of another articles work. The article called \emph{Multipath TCP in LTE Networks} and in it they have results from simulations we would have wanted to do so by using their results we will probably be able to draw the same conclusions we would have with our own simulation, if not even better.
-
-The method they used was to set up a MPTCP client and server with a data flow program called Iperf. They then used a program called tcptrace to get the information about transmission speed, delay and other various details about the connection and transmission.
+The method they used was to set up a network with a data flow program called Iperf. They then used a program called tcptrace to get the information about transmission speed, delay and other various details about the connection and transmission. This was then processed in a data analysis tool called UDA. We have not used, nor heard of any of these tools. But we mention them as it might be a good idea to have them in mind when looking at the result and if we are to do further studies of our own.
 
 %First of all we need a few nodes that can connect in a way we want, and they have to be able to communicate with a given quantity of data that we can measure. We also need to be able to split this data up in any way we want between several paths. In these paths we have to be able to set different factors like noise, other traffic and just about anything that would interfere with our packets in a "real world" scenario.
 
 %Once we have software that can do all this we have a few experiments we will try. At first we will just test the most simple networks with only a few nodes sending data to each other without any real interference to get a sense of what is good throughput and a calm network. Once we have done this we will raise the complexity of the network. Add more nodes that communicate with each other and flooding the network with packets. Our hope is to be able to do this as gradually as possible to see the decline in effectiveness of the network. Hopefully we will be able to see a trend of what factors do the most good or harm to the network and what methods of routing are best for each different scenario.
 
-
+The specific scenario they used was a server with two ethernet interfaces conected to the Internet with a lot of capacity. The client has two LTE modems that connects it to the internet. MPTCP was then set up using all different combinations of connections, so a total of 4 different connections. See figure 2.
+ 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[scale=0.26]{Figure_1}
 \end{center}
 \end{figure}
+
+In addition, they did make the connections a bit different. The two LTE interfaces have different quality and power. LTE0 has slightly lower power but higher quality than LTE1. We wont go into detail about these two mesurements of power and quality, but they are referred to as Reference Signal Recieved Power and Reference Signal Recieved Quality, or for short RSRP and RSRQ.
 
 
 \section{Hypothesis}
@@ -74,13 +75,10 @@ Also, when there is a lot of different paths there is less chance of trouble if 
 
 There are still some problems with multipathing. When looking at multipathing between cellular and wi-fi (which is probably the most relevant multi-channel implementation) we can often see a significant difference in RTT (round trip time). We believe that this might end up showing some interesting effects in the case of multipathing. We also often have the issue of the cellular connection being metered, which is a strong reason to not use it if wi-fi is available. These two facts lead us to believe that there are ways to use the multipathing in such a way that both links are able to bring their respective benefits into the multipathing algorithms. One might be able to distribute the data over the two links depending on some attribute of the data, for instance how big the packet is or what application requested the TCP-delivery. Though the latter suggestion will probably violate the protocol stack praxis.
 
-\section{Research and simulations}
+\section{Results}
 
-\subsection{Problems and solutions}
+They 
 
-The first thing to state is that we have not been able to do our own simulations. It proved too complicated to do any actual simulations using programs like dummynet, NS-3 and OMNET++. None of these examples had a working implementation of multipath-tcp so to make one we would have to write the code ourselves, and since we have not had any previous courses in C++ coding this was a task too difficult.
-
-But on a brighter note we found that we were not alone in wanting to do these types of simulations. We found a few different articles that cover this specific area. One in particular used OMNET++ to simulate and evaluate multipath-tcp in LTE networks. So instead of doing our own tests we will use the results of the \emph{Multipath TCP in LTE Networks} from Czech Technical University in Prague
 
 
 
